@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grayrot Studios — Archive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+
+  :root{
+    --void: #0a0907;
+    --wallpaper: #8c7a3c;
+    --wallpaper-dim: #4a4222;
+    --wallpaper-bright: #b8a04f;
+    --carpet: #211d12;
+    --carpet-light: #2e2818;
+    --fluorescent: #e8dfa8;
+    --rust: #6b2f1f;
+    --rust-bright: #9a4a2e;
+    --concrete: #a39d86;
+    --concrete-dim: #6b6655;
+
+    --display: 'Oswald', sans-serif;
+    --body: 'Inter', sans-serif;
+    --mono: 'Courier Prime', monospace;
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+
+  html{ scroll-behavior:smooth; }
+
+  body{
+    background: var(--void);
+    color: var(--concrete);
+    font-family: var(--body);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+  }
+
+  a{ color: inherit; text-decoration:none; }
+
+  ::selection{ background: var(--wallpaper-dim); color: var(--fluorescent); }
+
+  /* ---------- texture ---------- */
+  .noise{
+    position: fixed; inset:0; pointer-events:none; z-index: 500;
+    opacity: 0.035; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ---------- nav ---------- */
+  header{
+    position: fixed; top:0; left:0; right:0; z-index: 100;
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 22px 6vw;
+    background: linear-gradient(to bottom, rgba(10,9,7,0.92), transparent);
+  }
+  .logo{
+    font-family: var(--display); font-size: 1.05rem; letter-spacing: 0.22em;
+    color: var(--fluorescent); text-transform: uppercase; font-weight: 600;
+  }
+  .logo span{ color: var(--wallpaper); }
+  nav ul{ display:flex; gap: 2.6rem; list-style:none; }
+  nav a{
+    font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--concrete-dim);
+    position: relative; padding-bottom: 4px; transition: color 0.3s ease;
+  }
+  nav a:hover, nav a:focus-visible{ color: var(--fluorescent); }
+  nav a::after{
+    content:""; position:absolute; left:0; bottom:0; height:1px; width:0;
+    background: var(--wallpaper-bright); transition: width 0.3s ease;
+  }
+  nav a:hover::after, nav a:focus-visible::after{ width:100%; }
+
+  /* ---------- hero / corridor ---------- */
+  .hero{
+    position: relative; height: 100vh; min-height: 640px;
+    display:flex; align-items:center; justify-content:center;
+    overflow:hidden;
+    background: var(--void);
+  }
+
+  .corridor{
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    perspective: 480px;
+  }
+  .corridor-frame{
+    position:absolute;
+    border: 18px solid var(--wallpaper-dim);
+    box-shadow: inset 0 0 60px rgba(0,0,0,0.6);
+  }
+  /* frames generated to recede toward vanishing point, ceiling/floor tint differs from walls */
+  .corridor-frame.f1{ width: 1400px; height: 900px; border-color: #322c19; opacity: 0.9; }
+  .corridor-frame.f2{ width: 1140px; height: 740px; border-color: #463d20; opacity: 0.88; }
+  .corridor-frame.f3{ width: 900px;  height: 590px; border-color: #5a4d27; opacity: 0.85; }
+  .corridor-frame.f4{ width: 690px;  height: 460px; border-color: #6e5d2c; opacity: 0.82; }
+  .corridor-frame.f5{ width: 510px;  height: 350px; border-color: #806b2f; opacity: 0.8; }
+  .corridor-frame.f6{ width: 360px;  height: 250px; border-color: #8c7a3c; opacity: 0.78; }
+  .corridor-frame.f7{ width: 230px;  height: 165px; border-color: #978332; opacity: 0.76; }
+
+  .vanishing-light{
+    position:absolute; width: 180px; height: 110px; border-radius: 4px;
+    background: radial-gradient(ellipse at center, var(--fluorescent) 0%, rgba(232,223,168,0.35) 38%, transparent 75%);
+    filter: blur(4px);
+    animation: flicker 5.2s infinite steps(14, end);
+  }
+
+  @keyframes flicker{
+    0%, 100% { opacity: 0.95; }
+    4%  { opacity: 0.3; }
+    8%  { opacity: 0.9; }
+    12% { opacity: 0.95; }
+    37% { opacity: 0.5; }
+    38% { opacity: 0.95; }
+    63% { opacity: 0.2; }
+    64% { opacity: 0.9; }
+    81% { opacity: 0.4; }
+    82% { opacity: 0.95; }
+  }
+
+  .hero-floor-glow{
+    position:absolute; bottom:0; left:0; right:0; height: 40%;
+    background: linear-gradient(to top, rgba(10,9,7,0.95), transparent);
+    z-index: 2;
+  }
+
+  .hero-content{
+    position: relative; z-index: 5; text-align:center; padding: 0 1.5rem;
+  }
+  .hero-eyebrow{
+    font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.3em;
+    color: var(--rust-bright); text-transform: uppercase; display:block; margin-bottom: 1.4rem;
+    text-shadow: 0 0 12px rgba(154,74,46,0.5);
+  }
+  .hero h1{
+    font-family: var(--display); font-weight: 700;
+    font-size: clamp(2.4rem, 7vw, 5.4rem); line-height: 1.02;
+    letter-spacing: 0.01em; text-transform: uppercase;
+    color: var(--fluorescent);
+    text-shadow: 0 0 30px rgba(232,223,168,0.18), 0 2px 0 rgba(0,0,0,0.6);
+  }
+  .hero h1 em{
+    font-style:normal; color: var(--wallpaper-bright);
+    animation: flicker 5.2s infinite steps(14, end);
+  }
+  .hero p{
+    max-width: 480px; margin: 1.8rem auto 0;
+    color: var(--concrete); font-size: 1.02rem;
+  }
+  .scroll-cue{
+    position:absolute; bottom: 38px; left:50%; transform: translateX(-50%);
+    font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.25em;
+    color: var(--concrete-dim); text-transform: uppercase;
+    display:flex; flex-direction:column; align-items:center; gap: 8px; z-index:5;
+  }
+  .scroll-cue::after{
+    content:""; width:1px; height: 34px; background: var(--concrete-dim);
+    animation: drip 2.4s ease-in-out infinite;
+  }
+  @keyframes drip{ 0%{ transform: scaleY(0.2); opacity:0.3; } 50%{ transform: scaleY(1); opacity:1; } 100%{ transform: scaleY(0.2); opacity:0.3; } }
+
+  /* ---------- section shells ---------- */
+  section{ position: relative; padding: 8rem 6vw; }
+  .section-tag{
+    font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.25em;
+    color: var(--wallpaper-bright); text-transform: uppercase; margin-bottom: 1rem; display:block;
+  }
+  .section-title{
+    font-family: var(--display); font-weight: 600; text-transform: uppercase;
+    font-size: clamp(1.8rem, 3.4vw, 2.6rem); color: var(--fluorescent);
+    letter-spacing: 0.01em; max-width: 720px;
+  }
+
+  /* ---------- about ---------- */
+  .about{ background: var(--carpet); border-top: 1px solid rgba(140,122,60,0.2); border-bottom: 1px solid rgba(140,122,60,0.2); }
+  .about-grid{
+    display:grid; grid-template-columns: 1.1fr 0.9fr; gap: 4rem; align-items: start; margin-top: 3rem;
+  }
+  .about-grid p{ font-size: 1.02rem; color: var(--concrete); max-width: 540px; }
+  .about-grid p + p{ margin-top: 1.2rem; }
+
+  .stamp{
+    border: 2px solid var(--rust-bright); padding: 1.6rem 1.8rem;
+    transform: rotate(-1.4deg);
+    background: rgba(107,47,31,0.06);
+    font-family: var(--mono);
+  }
+  .stamp-row{ display:flex; justify-content:space-between; gap: 1rem; font-size: 0.72rem; letter-spacing: 0.08em; color: var(--concrete-dim); text-transform:uppercase; padding: 0.35rem 0; border-bottom: 1px dashed rgba(163,157,134,0.18); }
+  .stamp-row:last-child{ border-bottom:none; }
+  .stamp-row b{ color: var(--fluorescent); font-weight:700; letter-spacing: 0.05em; }
+
+  /* ---------- archive / games ---------- */
+  .archive{ background: var(--void); }
+  .archive-head{ display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap: 1.5rem; margin-bottom: 3.5rem; }
+  .archive-count{ font-family: var(--mono); font-size: 0.78rem; color: var(--concrete-dim); letter-spacing: 0.08em; }
+
+  .file-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.6rem; }
+
+  .file-card{
+    position: relative; border: 1px solid var(--wallpaper-dim);
+    background: linear-gradient(160deg, var(--carpet-light), var(--carpet) 70%);
+    padding: 1.9rem 1.9rem 2.2rem; overflow:hidden;
+    transition: border-color 0.4s ease, transform 0.4s ease;
+  }
+  .file-card:hover{ border-color: var(--wallpaper-bright); transform: translateY(-3px); }
+
+  .file-card::before{
+    content:""; position:absolute; top:0; left:0; right:0; height: 3px;
+    background: repeating-linear-gradient(90deg, var(--rust) 0 10px, transparent 10px 18px);
+    opacity: 0.6;
+  }
+
+  .file-id{ font-family: var(--mono); font-size: 0.68rem; color: var(--concrete-dim); letter-spacing: 0.1em; text-transform: uppercase; }
+  .file-name{ font-family: var(--display); font-size: 1.5rem; color: var(--fluorescent); text-transform: uppercase; margin: 0.5rem 0 0.8rem; letter-spacing: 0.01em; }
+  .file-desc{ font-size: 0.92rem; color: var(--concrete); margin-bottom: 1.4rem; }
+
+  .status-row{ display:flex; align-items:center; gap: 0.6rem; margin-bottom: 1.6rem; }
+  .status-dot{ width: 8px; height: 8px; border-radius: 50%; background: var(--rust-bright); animation: flicker 5.2s infinite steps(14,end); flex-shrink:0; }
+  .status-label{ font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--rust-bright); }
+
+  .file-action{
+    display:flex; align-items:center; justify-content: space-between; gap: 1rem;
+    border: 1px dashed var(--wallpaper-dim); padding: 0.9rem 1.1rem;
+  }
+  .file-action span{ font-family: var(--mono); font-size: 0.76rem; color: var(--concrete-dim); letter-spacing: 0.05em; }
+  .locked-icon{ width: 16px; height: 16px; flex-shrink:0; opacity: 0.7; }
+
+  .redact{
+    display:inline-block; background: var(--concrete-dim); color: transparent; border-radius: 2px;
+    padding: 0 4px; user-select:none;
+  }
+
+  .file-card.future{ opacity: 0.55; border-style: dashed; }
+  .file-card.future .file-name{ color: var(--concrete-dim); }
+
+  /* ---------- contact / footer ---------- */
+  footer{
+    background: var(--carpet); border-top: 1px solid rgba(140,122,60,0.2);
+    padding: 4.5rem 6vw 3rem;
+  }
+  .footer-grid{ display:flex; justify-content:space-between; flex-wrap:wrap; gap: 2.5rem; }
+  .footer-left .logo{ display:block; margin-bottom: 0.8rem; }
+  .footer-left p{ font-size: 0.88rem; color: var(--concrete-dim); max-width: 320px; }
+  .footer-links{ display:flex; gap: 3rem; flex-wrap:wrap; }
+  .footer-col h4{ font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--wallpaper-bright); margin-bottom: 0.9rem; }
+  .footer-col a{ display:block; font-size: 0.85rem; color: var(--concrete-dim); margin-bottom: 0.55rem; transition: color 0.3s ease; }
+  .footer-col a:hover{ color: var(--fluorescent); }
+  .footer-bottom{ margin-top: 3.5rem; padding-top: 1.6rem; border-top: 1px solid rgba(140,122,60,0.12); font-family: var(--mono); font-size: 0.7rem; color: var(--concrete-dim); display:flex; justify-content:space-between; flex-wrap:wrap; gap: 0.6rem; letter-spacing: 0.05em; }
+
+  /* ---------- focus ---------- */
+  a:focus-visible, button:focus-visible{ outline: 2px solid var(--fluorescent); outline-offset: 3px; }
+
+  @media (max-width: 760px){
+    .about-grid{ grid-template-columns: 1fr; }
+    section{ padding: 5.5rem 6vw; }
+    nav ul{ gap: 1.4rem; }
+    .stamp{ transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="noise"></div>
+
+<header>
+  <div class="logo">GRAY<span>ROT</span> STUDIOS</div>
+  <nav>
+    <ul>
+      <li><a href="#archive">Archive</a></li>
+      <li><a href="#studio">Studio</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="corridor" aria-hidden="true">
+    <div class="corridor-frame f1"></div>
+    <div class="corridor-frame f2"></div>
+    <div class="corridor-frame f3"></div>
+    <div class="corridor-frame f4"></div>
+    <div class="corridor-frame f5"></div>
+    <div class="corridor-frame f6"></div>
+    <div class="corridor-frame f7"></div>
+    <div class="vanishing-light"></div>
+  </div>
+  <div class="hero-floor-glow" aria-hidden="true"></div>
+  <div class="hero-content">
+    <span class="hero-eyebrow">Est. — Unknown Floor</span>
+    <h1>The Walls<br>Keep <em>Moving</em></h1>
+    <p>Grayrot Studios builds horror set in the backrooms — the rooms behind reality that hum, flicker, and never quite end. This is where we publish every game we make.</p>
+  </div>
+  <a href="#archive" class="scroll-cue">Enter</a>
+</section>
+
+<section class="about" id="studio">
+  <span class="section-tag">Classification — Studio</span>
+  <h2 class="section-title">We document spaces that shouldn't exist.</h2>
+  <div class="about-grid">
+    <div>
+      <p>Grayrot Studios is a small horror studio working in one setting: the backrooms. Endless office floors, dead malls, motel corridors that loop back on themselves — places that feel almost normal until you notice the lighting never changes and the carpet never ends.</p>
+      <p>Every game we ship gets archived here first. No storefronts, no middlemen — just the case file, the build, and a download link the moment it's ready.</p>
+    </div>
+    <div class="stamp">
+      <div class="stamp-row"><span>Studio</span><b>Grayrot</b></div>
+      <div class="stamp-row"><span>Genre</span><b>Liminal Horror</b></div>
+      <div class="stamp-row"><span>Titles released</span><b>00</b></div>
+      <div class="stamp-row"><span>Titles in development</span><b>01</b></div>
+      <div class="stamp-row"><span>Archive status</span><b>Active</b></div>
+    </div>
+  </div>
+</section>
+
+<section class="archive" id="archive">
+  <div class="archive-head">
+    <div>
+      <span class="section-tag">Game Archive</span>
+      <h2 class="section-title">Downloadable titles</h2>
+    </div>
+    <span class="archive-count">01 entry on file</span>
+  </div>
+
+  <div class="file-grid">
+    <article class="file-card">
+      <div class="file-id">Case file — GR-001</div>
+      <h3 class="file-name">Project Complex</h3>
+      <p class="file-desc">An office building that was never supposed to have a sub-level. You're looking for the way out. So is everything else in here.</p>
+      <div class="status-row">
+        <span class="status-dot"></span>
+        <span class="status-label">Still in the works</span>
+      </div>
+      <div class="file-action">
+        <span>No build available yet</span>
+        <svg class="locked-icon" viewBox="0 0 24 24" fill="none" stroke="#a39d86" stroke-width="1.6">
+          <rect x="5" y="11" width="14" height="9" rx="1.5"></rect>
+          <path d="M8 11V7a4 4 0 0 1 8 0v4"></path>
+        </svg>
+      </div>
+    </article>
+
+    <article class="file-card future">
+      <div class="file-id">Case file — <span class="redact">GR-002</span></div>
+      <h3 class="file-name">Undisclosed</h3>
+      <p class="file-desc">Nothing on record yet. This slot is reserved for whatever we find next.</p>
+      <div class="status-row">
+        <span class="status-dot" style="background: var(--concrete-dim); animation: none;"></span>
+        <span class="status-label" style="color: var(--concrete-dim);">Not started</span>
+      </div>
+      <div class="file-action">
+        <span>Check back later</span>
+      </div>
+    </article>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="footer-grid">
+    <div class="footer-left">
+      <div class="logo">GRAY<span>ROT</span> STUDIOS</div>
+      <p>A horror studio documenting the backrooms, one floor at a time.</p>
+    </div>
+    <div class="footer-links">
+      <div class="footer-col">
+        <h4>Archive</h4>
+        <a href="#archive">All games</a>
+        <a href="#archive">Project Complex</a>
+      </div>
+      <div class="footer-col">
+        <h4>Studio</h4>
+        <a href="#studio">About</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h4>Follow</h4>
+        <a href="#">Twitter / X</a>
+        <a href="#">YouTube</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Grayrot Studios. All rights reserved.</span>
+    <span>You are still on this floor.</span>
+  </div>
+</footer>
+
+</body>
+</html>
